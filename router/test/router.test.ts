@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { applyUpdate, defaultConfig, isEmbeddingModel, maskKey, mergeWithDefaults, parseTarget, redactConfig } from "../src/config";
 import { parseDuration, QuotaTracker, retryAfterMs } from "../src/quota";
-import { classify, usageSniffer } from "../src/router";
+import { classify, isFallback, usageSniffer } from "../src/router";
 import { cfg, chatBody, localAware, mockFetch, okChat, stack } from "./helpers";
 
 describe("config", () => {
@@ -84,6 +84,14 @@ describe("classify upstream errors", () => {
     expect(classify(400, "This model does not support tools").fallback).toBe(true);
     expect(classify(400, '{"error":"messages[0].role is invalid"}').fallback).toBe(false);
     expect(classify(400, "API key not valid. Please pass a valid API key.").providerWide).toBe(true);
+  });
+});
+
+describe("fallback accounting", () => {
+  test("skips for missing keys or disabled providers are not fallbacks; failures and cooldowns are", () => {
+    expect(isFallback([{ target: "a", outcome: "skipped", reason: "no API key" }, { target: "b", outcome: "ok" }])).toBe(false);
+    expect(isFallback([{ target: "a", outcome: "skipped", reason: "cooldown" }, { target: "b", outcome: "ok" }])).toBe(true);
+    expect(isFallback([{ target: "a", outcome: "failed", status: 429 }, { target: "b", outcome: "ok" }])).toBe(true);
   });
 });
 

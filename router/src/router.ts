@@ -67,6 +67,11 @@ const NO_TOOLS = /tool.{0,40}(not supported|unsupported|not available)|does not 
 const STREAM_USAGE = new Set(["groq", "openrouter", "cerebras", "github", "nvidia"]);
 const TOO_LARGE = /(context|token|length|too (large|long)|maximum|exceed)/i;
 
+/** A request "fell back" when a target was tried and failed, or was skipped for a live reason (quota, cooldown, server down). */
+export function isFallback(attempts: Attempt[]): boolean {
+  return attempts.some((a) => a.outcome === "failed" || (a.outcome === "skipped" && /cooldown|rpm|rpd|remaining|not running|not reachable/.test(a.reason ?? "")));
+}
+
 export function providerUrl(p: ProviderConfig, path: string): string {
   return p.baseUrl.replace(/\/+$/, "") + path;
 }

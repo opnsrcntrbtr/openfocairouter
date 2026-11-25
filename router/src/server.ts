@@ -2,7 +2,7 @@
 import { redactConfig, applyUpdate, type AppConfig, type ClientConfig } from "./config";
 import { createClient, hashKey, identify, newClientKey } from "./clients";
 import { countTokens } from "./anthropic";
-import type { Router } from "./router";
+import { isFallback, type Router } from "./router";
 import type { Gateway } from "./gateway";
 import type { Classifier } from "./classify";
 import type { ResponseCache } from "./cache";
@@ -106,6 +106,8 @@ export function createHandler(deps: ServerDeps) {
 
     // ---------- Public APIs ----------
     if (path.startsWith("/v1")) {
+      // In the desktop app, give the shell a moment to deliver Keychain secrets after launch.
+      for (let i = 0; secrets.managed && !secretsReadyFlag.ready && i < 40; i++) await Bun.sleep(50);
       if (path === "/v1/models" && req.method === "GET") {
         if (!identify(req, getConfig(), adminToken)) return oaiError("A valid OpenFOC client key is required.", 401, "authentication_error");
         const created = Math.floor(Date.now() / 1000);
@@ -164,7 +166,7 @@ export function createHandler(deps: ServerDeps) {
       }
 
       if (path === "/admin/usage" && req.method === "GET") {
-        return json({ ...router.quota.snapshot(), events: router.events.slice(0, 50), scores: router.balancer.snapshot(), cache: cache.stats(), now: Date.now() });
+        return json({ ...router.quota.snapshot(), events: router.events.slice(0, 50).map((e) => ({ ...e, fallback: isFallback(e.attempts) })), scores: router.balancer.snapshot(), cache: cache.stats(), now: Date.now() });
       }
       if (path === "/admin/usage/reset" && req.method === "POST") {
         router.quota.reset();

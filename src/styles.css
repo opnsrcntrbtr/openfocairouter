@@ -81,3 +81,20 @@ details { margin-top: 10px; } summary { cursor: pointer; color: var(--muted); fo
 .msg.error .bubble { border-color: var(--bad); color: var(--bad); }
 .msg .meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
 .composer { display: flex; gap: 8px; padding-top: 10px; } .composer textarea { flex: 1; resize: none; }
+
+input.url { width: 100%; margin-top: 4px; }
+input.num.tiny { width: 44px; }
+tr.off { opacity: .55; }
+td.actions { white-space: nowrap; text-align: right; }
+tr.clickable { cursor: pointer; } tr.clickable:hover td { background: var(--panel2); }
+.filters > input:first-child { min-width: 280px; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(640px, 70vw); background: var(--panel); border-left: 1px solid var(--line); padding: 18px 22px; overflow-y: auto; box-shadow: -8px 0 24px rgba(0,0,0,.25); z-index: 10; }
+.drawer h3 { font-size: 13px; margin: 18px 0 6px; }
+pre.body { background: var(--panel2); padding: 10px; border-radius: 8px; max-height: 260px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+.timeline { padding-left: 20px; margin: 0; } .timeline li { margin: 6px 0; }
+.toggle-row { display: flex; gap: 10px; align-items: center; margin: 8px 0; cursor: pointer; }
+table.compact td, table.compact th { padding: 6px 8px; }
+textarea.examples { width: 100%; font-size: 12px; }
+.keybox code { word-break: break-all; }
+.bad { color: var(--bad); }
+.provider h2 { margin-top: 0; }

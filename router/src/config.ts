@@ -375,7 +375,7 @@ export function defaultConfig(): AppConfig {
       enabled: false,
       stickyMinutes: 30,
       longContextTokens: 24_000,
-      quickMaxChars: 200,
+      quickMaxChars: 80,
       margin: 0.05,
       embedder: "",
       tasks: structuredClone(DEFAULT_TASKS),
@@ -443,6 +443,7 @@ export function redactConfig(cfg: AppConfig, keyFor?: (id: string) => string | u
   return {
     ...cfg,
     providers: cfg.providers.map((p) => ({ ...p, apiKey: maskKey(keyFor ? keyFor(p.id) : p.apiKey) })),
+    clients: cfg.clients.map((c) => ({ ...c, keyHash: "" })),
   };
 }
 

@@ -25,7 +25,7 @@ export default function Chat({ config }: { config: Config }) {
         (d) => setTurns((ts) => { const c = [...ts]; const last = c[c.length - 1]!; c[c.length - 1] = { ...last, content: last.content + d }; return c; }),
         abort.current.signal,
       );
-      setTurns((ts) => { const c = [...ts]; c[c.length - 1] = { ...c[c.length - 1]!, served: `${meta.provider}/${meta.model}`, fallbacks: Number(meta.attempts ?? 1) - 1 }; return c; });
+      setTurns((ts) => { const c = [...ts]; c[c.length - 1] = { ...c[c.length - 1]!, served: `${meta.task ? `[${meta.task}] ` : ""}${meta.provider}/${meta.model}${meta.cache && meta.cache !== "miss" && meta.cache !== "bypass" ? ` · ${meta.cache}` : ""}`, fallbacks: Math.max(0, Number(meta.attempts ?? 1) - 1) }; return c; });
     } catch (e) {
       if ((e as Error).name !== "AbortError")
         setTurns((ts) => { const c = [...ts]; c[c.length - 1] = { role: "assistant", content: (e as Error).message, error: true }; return c; });
@@ -40,6 +40,7 @@ export default function Chat({ config }: { config: Config }) {
         <h1>Chat</h1>
         <div className="row">
           <select value={model} onChange={(e) => setModel(e.target.value)}>
+            <option value="auto:task">auto:task (classify)</option>
             {config.routes.map((r) => <option key={r.name} value={r.name}>route: {r.name}</option>)}
           </select>
           <button className="ghost" onClick={() => setTurns([])}>Clear</button>

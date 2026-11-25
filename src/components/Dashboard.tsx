@@ -21,7 +21,7 @@ export default function Dashboard({ config, usage, onGo }: { config: Config; usa
   const rows = Object.entries(usage?.targets ?? {}).sort((a, b) => (b[1].lastUsedAt ?? 0) - (a[1].lastUsedAt ?? 0));
   const totals = rows.reduce((t, [, s]) => ({ req: t.req + s.requestsToday, tok: t.tok + s.tokensToday, fail: t.fail + s.failures }), { req: 0, tok: 0, fail: 0 });
   const events = usage?.events ?? [];
-  const fallbacks = events.filter((e) => e.ok && e.attempts.length > 1).length;
+  const fallbacks = events.filter((e) => e.ok && e.fallback).length;
   const noKeys = config.providers.filter((p) => p.kind === "cloud" && p.enabled && !p.apiKey);
 
   return (
@@ -41,12 +41,12 @@ export default function Dashboard({ config, usage, onGo }: { config: Config; usa
         <div className="card"><span>Requests today</span><strong>{totals.req}</strong></div>
         <div className="card"><span>Tokens today</span><strong>{totals.tok.toLocaleString()}</strong></div>
         <div className="card"><span>Saved by fallback</span><strong>{fallbacks}</strong><em>of last {events.length}</em></div>
-        <div className="card"><span>Cost</span><strong>$0.00</strong><em>free tiers only</em></div>
+        <div className="card"><span>Cache</span><strong>{usage?.cache.hits ?? 0}</strong><em>hits · {usage?.cache.entries ?? 0} entries</em></div>
       </div>
 
       <h2>Quota by model</h2>
       {rows.length === 0 ? (
-        <p className="muted">No traffic yet. Point a tool at <code>http://127.0.0.1:4141/v1</code> or try the Chat tab.</p>
+        <p className="muted">No traffic yet. Point a tool at <code>http://127.0.0.1:4141/v1</code> (OpenAI) or <code>http://127.0.0.1:4141</code> (Anthropic), or try the Chat tab.</p>
       ) : (
         <table>
           <thead>
@@ -88,11 +88,12 @@ export default function Dashboard({ config, usage, onGo }: { config: Config; usa
         {events.slice(0, 15).map((e, i) => (
           <li key={i} className={e.ok ? "" : "failed"}>
             <span className="muted">{new Date(e.at).toLocaleTimeString()}</span>
-            <code>{e.requested}</code>→<code>{e.served ?? "none"}</code>
+            {e.client && <span className="pill">{e.client}</span>}
+            <code>{e.requested}</code>{e.task && <span className="pill local">{e.task}</span>}→<code>{e.served ?? "none"}</code>
             <span className="muted">{e.ms} ms{e.stream ? " · stream" : ""}</span>
-            {e.attempts.length > 1 && (
+            {e.fallback && (
               <span className="trail" title={e.attempts.map((a) => `${a.target}: ${a.outcome}${a.status ? ` ${a.status}` : ""}${a.reason ? ` (${a.reason})` : ""}`).join("\n")}>
-                {e.attempts.length - 1} fallback{e.attempts.length > 2 ? "s" : ""}
+                fallback
               </span>
             )}
           </li>

@@ -1,6 +1,7 @@
 // SQLite storage (bun:sqlite, WAL): request log + FTS, cache, per-client daily stats.
 import { Database } from "bun:sqlite";
-import type { Attempt } from "./router";
+import { chmodSync, existsSync } from "node:fs";
+import { isFallback, type Attempt } from "./router";
 
 export interface LogRow {
   id?: number;
@@ -59,6 +60,7 @@ export class Store {
 
   constructor(path: string) {
     this.db = new Database(path, { create: true });
+    if (path !== ":memory:" && existsSync(path)) chmodSync(path, 0o600);
     this.db.exec("PRAGMA journal_mode = WAL; PRAGMA synchronous = NORMAL; PRAGMA busy_timeout = 2000;");
     this.migrate();
   }
@@ -124,7 +126,7 @@ export class Store {
           JSON.stringify(r.attempts), r.status, r.stream ? 1 : 0, r.cache ?? null, r.ttfbMs ?? null, r.ms, r.promptTokens ?? null,
           r.completionTokens ?? null, r.error ?? null, cap(r.requestBody), cap(r.responseBody));
         if (fts && (r.requestBody || r.responseBody)) fts.run(Number(res.lastInsertRowid), cap(r.requestBody), cap(r.responseBody));
-        const fallbacks = r.attempts.filter((a) => a.outcome !== "ok").length > 0 && r.status < 400 ? 1 : 0;
+        const fallbacks = r.status < 400 && isFallback(r.attempts) ? 1 : 0;
         day.run(r.client, localDay(r.ts), r.promptTokens ?? 0, r.completionTokens ?? 0, r.status >= 400 ? 1 : 0, fallbacks,
           r.cache && r.cache !== "miss" ? 1 : 0, r.ms);
       }
