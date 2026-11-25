@@ -179,3 +179,39 @@ describe("streaming", () => {
     expect(done.total_tokens).toBe(3);
   });
 });
+
+describe("timeouts", () => {
+  test("timeout applies to headers only: a slow stream after headers is not cut off", async () => {
+    const c = cfg();
+    c.requestTimeoutMs = 100;
+    c.routes[0]!.targets = ["groq/a"];
+    const f = mockFetch(() => {
+      const enc = new TextEncoder();
+      const body = new ReadableStream({
+        async start(ctl) {
+          ctl.enqueue(enc.encode('data: {"choices":[{"delta":{"content":"a"}}]}\n\n'));
+          await Bun.sleep(250); // longer than the timeout
+          ctl.enqueue(enc.encode('data: {"choices":[{"delta":{"content":"b"}}]}\n\ndata: [DONE]\n\n'));
+          ctl.close();
+        },
+      });
+      return new Response(body, { headers: { "content-type": "text/event-stream" } });
+    });
+    const s = stack({ config: c, fetch: f });
+    const txt = await (await s.call("/v1/chat/completions", { json: chatBody("x", { stream: true }) })).text();
+    expect(txt).toContain('"b"');
+  });
+  test("no headers within the timeout → timeout and fallback", async () => {
+    const c = cfg();
+    c.requestTimeoutMs = 50;
+    const f = mockFetch(localAware(async (url, init) => {
+      if (url.includes("groq")) {
+        await new Promise((r, j) => init?.signal?.addEventListener("abort", () => j(init.signal!.reason)));
+      }
+      return okChat(url);
+    }));
+    const s = stack({ config: c, fetch: f });
+    const res = await s.call("/v1/chat/completions", { json: chatBody() });
+    expect(res.headers.get("x-ofr-provider")).toBe("gemini");
+  });
+});

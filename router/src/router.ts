@@ -72,6 +72,27 @@ export function isFallback(attempts: Attempt[]): boolean {
   return attempts.some((a) => a.outcome === "failed" || (a.outcome === "skipped" && /cooldown|rpm|rpd|remaining|not running|not reachable/.test(a.reason ?? "")));
 }
 
+/**
+ * Fetch with a timeout that covers connecting and waiting for response headers only.
+ * Streams may then run as long as the model keeps producing tokens.
+ */
+export async function fetchHeaders(fetchImpl: FetchFn, url: string, init: RequestInit, timeoutMs: number): Promise<Response> {
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(new DOMException("timeout", "TimeoutError")), timeoutMs);
+  try {
+    return await fetchImpl(url, { ...init, signal: ac.signal });
+  } catch (e) {
+    if (ac.signal.aborted) {
+      const err = new Error("timeout");
+      err.name = "TimeoutError";
+      throw err;
+    }
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export function providerUrl(p: ProviderConfig, path: string): string {
   return p.baseUrl.replace(/\/+$/, "") + path;
 }
@@ -266,12 +287,11 @@ export class Router {
       if (stream && STREAM_USAGE.has(p.id) && upstreamBody.stream_options === undefined) upstreamBody.stream_options = { include_usage: true };
       let res: Response;
       try {
-        res = await this.fetchImpl(providerUrl(p, "/chat/completions"), {
+        res = await fetchHeaders(this.fetchImpl, providerUrl(p, "/chat/completions"), {
           method: "POST",
           headers: this.authHeaders(p),
           body: JSON.stringify(upstreamBody),
-          signal: AbortSignal.timeout(this.getConfig().requestTimeoutMs),
-        });
+        }, this.getConfig().requestTimeoutMs);
       } catch (e) {
         const msg = (e as Error).name === "TimeoutError" ? "timeout" : (e as Error).message;
         this.quota.recordFailure(key, 0, msg, p.kind === "local" ? 15_000 : "backoff");
@@ -372,12 +392,11 @@ export class Router {
       this.quota.recordAttempt(key);
       const t0 = this.clock();
       try {
-        const res = await this.fetchImpl(providerUrl(p, "/embeddings"), {
+        const res = await fetchHeaders(this.fetchImpl, providerUrl(p, "/embeddings"), {
           method: "POST",
           headers: this.authHeaders(p),
           body: JSON.stringify({ ...body, model: r.model }),
-          signal: AbortSignal.timeout(this.getConfig().requestTimeoutMs),
-        });
+        }, this.getConfig().requestTimeoutMs);
         this.quota.recordHeaders(key, res.headers);
         const ms = this.clock() - t0;
         if (res.ok) {

@@ -178,7 +178,7 @@ export class Gateway {
     }
     const baseLog = {
       ts: t0, client: who.id, api, requested: displayModel, task: task?.task ?? null, taskScore: task?.score ?? null,
-      taskReason: task?.reason ?? null, stream, requestBody: JSON.stringify(original),
+      taskReason: task?.reason ?? null, stream, requestBody: cfg.logging.bodies ? JSON.stringify(original) : null,
     };
 
     // ---- cache ----
