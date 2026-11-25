@@ -5,8 +5,10 @@ import Providers from "./components/Providers";
 import Routes from "./components/Routes";
 import Chat from "./components/Chat";
 import Settings from "./components/Settings";
+import Clients from "./components/Clients";
+import Logs from "./components/Logs";
 
-const TABS = ["Dashboard", "Providers", "Routes", "Chat", "Settings"] as const;
+const TABS = ["Dashboard", "Providers", "Routes", "Clients", "Logs", "Chat", "Settings"] as const;
 type Tab = (typeof TABS)[number];
 
 export default function App() {
@@ -43,6 +45,14 @@ export default function App() {
     return () => { alive = false; clearInterval(id); };
   }, [status]);
 
+  const reload = useCallback(async () => {
+    try {
+      setConfig(await api.config());
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }, []);
+
   const save = useCallback(async (next: Config) => {
     try {
       setConfig(await api.saveConfig(next));
@@ -61,7 +71,7 @@ export default function App() {
           <div className="logo">◆</div>
           <div>
             <strong>OpenFOC</strong>
-            <span>AI Router</span>
+            <span>AI Router · v0.2</span>
           </div>
         </div>
         <nav>
@@ -84,8 +94,10 @@ export default function App() {
           </div>
         )}
         {config && tab === "Dashboard" && <Dashboard config={config} usage={usage} onGo={setTab} />}
-        {config && tab === "Providers" && <Providers config={config} usage={usage} onSave={save} />}
-        {config && tab === "Routes" && <Routes config={config} onSave={save} />}
+        {config && tab === "Providers" && <Providers config={config} usage={usage} onSave={save} onReload={reload} />}
+        {config && tab === "Routes" && <Routes config={config} usage={usage} onSave={save} />}
+        {config && tab === "Clients" && <Clients config={config} onSave={save} />}
+        {config && tab === "Logs" && <Logs config={config} />}
         {config && tab === "Chat" && <Chat config={config} />}
         {config && tab === "Settings" && <Settings config={config} onSave={save} />}
       </main>

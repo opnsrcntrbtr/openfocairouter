@@ -1,0 +1,100 @@
+{"task":"coding","text":"Write a TypeScript function that debounces another function with a configurable delay"}
+{"task":"coding","text":"My Express server returns 404 for every route after I added a router, here's app.js"}
+{"task":"coding","text":"How do I write a SQL query that finds the second highest salary per department?"}
+{"task":"coding","text":"Convert this Python 2 script to Python 3 and fix the print statements"}
+{"task":"coding","text":"Add pagination to this React table component that fetches from an API"}
+{"task":"coding","text":"Write Jest tests for the cart reducer including edge cases for empty carts"}
+{"task":"coding","text":"Why am I getting 'cannot borrow as mutable more than once' in this Rust loop?"}
+{"task":"coding","text":"Set up a GitHub Actions workflow that runs pytest on every pull request"}
+{"task":"coding","text":"Refactor this 300-line function into smaller testable units"}
+{"task":"coding","text":"Implement a binary search tree with insert, delete and in-order traversal in Go"}
+{"task":"coding","text":"Write a Flutter widget that shows a list with pull-to-refresh"}
+{"task":"coding","text":"Fix the memory leak in this Node.js event listener code"}
+{"task":"coding","text":"Generate a Prisma schema for users, orders and products with relations"}
+{"task":"coding","text":"Explain and fix this CORS error when my frontend calls my API"}
+{"task":"coding","text":"Write a shell script that backs up a Postgres database nightly and keeps 7 copies"}
+{"task":"coding","text":"Optimise this pandas code that loops over rows to be vectorised"}
+{"task":"coding","text":"Create a Kubernetes deployment and service yaml for a Python API"}
+{"task":"coding","text":"Debug why this async function never resolves when the request times out"}
+{"task":"coding","text":"Write a regex that validates Indian PAN numbers and explain each part"}
+{"task":"coding","text":"Add OAuth login with Google to my Next.js app using NextAuth"}
+{"task":"reasoning","text":"A bat and a ball cost 1.10 in total and the bat costs 1.00 more than the ball, how much is the ball? Explain carefully"}
+{"task":"reasoning","text":"If every manager is an employee and some employees are remote, can we conclude some managers are remote?"}
+{"task":"reasoning","text":"Work out the expected value of rolling two dice and taking the maximum"}
+{"task":"reasoning","text":"Three people check into a hotel room that costs 30, explain where the missing dollar went in the classic puzzle"}
+{"task":"reasoning","text":"Should a 20 person startup build or buy its billing system? Weigh the trade-offs and recommend"}
+{"task":"reasoning","text":"Derive the formula for the sum of the first n odd numbers and prove it by induction"}
+{"task":"reasoning","text":"Given these four constraints, schedule the meetings so nobody has back to back sessions"}
+{"task":"reasoning","text":"Estimate the number of smartphones sold in India each year, showing your assumptions"}
+{"task":"reasoning","text":"What is the flaw in the argument that because sales rose after the ad campaign, the campaign caused it?"}
+{"task":"reasoning","text":"Compare the long-term risks of index funds versus individual stocks for a 30 year horizon, reasoning step by step"}
+{"task":"reasoning","text":"A train leaves Pune at 60 km/h and another leaves Mumbai at 90 km/h towards it 150 km away, when do they meet?"}
+{"task":"reasoning","text":"Plan the order of tasks to launch a product given these dependencies and minimise total time"}
+{"task":"reasoning","text":"Is it rational to buy insurance with negative expected value? Argue both sides"}
+{"task":"reasoning","text":"Solve for x: 3x squared minus 12x plus 9 equals zero, and explain each step"}
+{"task":"reasoning","text":"What are the second-order effects of a four day work week on a logistics company?"}
+{"task":"reasoning","text":"Prove there are infinitely many prime numbers"}
+{"task":"reasoning","text":"Analyse whether we should raise prices by 10 percent given an elasticity of minus 1.5"}
+{"task":"reasoning","text":"Find the optimal strategy in this two player game where each picks a number from 1 to 10"}
+{"task":"reasoning","text":"Evaluate three architecture options for a payments system against cost, latency and compliance and pick one"}
+{"task":"reasoning","text":"How many ways can 8 people be seated around a round table if two of them refuse to sit together?"}
+{"task":"long-context","text":"Summarise the following annual report into the ten most important points for investors"}
+{"task":"long-context","text":"Here is the full meeting transcript, extract every decision and owner"}
+{"task":"long-context","text":"Read this research paper and explain the methodology and its limitations"}
+{"task":"long-context","text":"Go through this entire contract and list all termination clauses and notice periods"}
+{"task":"long-context","text":"Condense these 40 pages of interview notes into themes with quotes"}
+{"task":"long-context","text":"Compare the two policy documents below and list every difference"}
+{"task":"long-context","text":"I'm pasting a whole codebase README and docs, summarise how the system is structured"}
+{"task":"long-context","text":"Extract all dates, amounts and parties from the attached loan agreement"}
+{"task":"long-context","text":"Summarise this book chapter by chapter"}
+{"task":"long-context","text":"Read the attached SEBI circular and list the compliance obligations for brokers"}
+{"task":"long-context","text":"Turn this long email thread into a short status update"}
+{"task":"long-context","text":"Find every mention of data retention in the following privacy policy"}
+{"task":"long-context","text":"Here is a long log file, summarise the errors and when they started"}
+{"task":"long-context","text":"Create a timeline of events from the following case documents"}
+{"task":"long-context","text":"Summarise the key arguments of each speaker in this debate transcript"}
+{"task":"long-context","text":"Analyse the full customer survey responses below and group the complaints"}
+{"task":"long-context","text":"Read through these product reviews and summarise the top praises and complaints"}
+{"task":"long-context","text":"Digest this 30 page technical specification into a one page brief"}
+{"task":"long-context","text":"List all action items from the attached project status documents"}
+{"task":"long-context","text":"Summarise the following quarterly earnings call transcript"}
+{"task":"quick","text":"hello"}
+{"task":"quick","text":"thanks a lot"}
+{"task":"quick","text":"What's the capital of Australia?"}
+{"task":"quick","text":"Translate 'thank you' into Hindi"}
+{"task":"quick","text":"How many grams in a kilogram?"}
+{"task":"quick","text":"Antonym of generous?"}
+{"task":"quick","text":"What day of the week is Christmas this year?"}
+{"task":"quick","text":"Who wrote Pride and Prejudice?"}
+{"task":"quick","text":"Convert 100 Fahrenheit to Celsius"}
+{"task":"quick","text":"good night"}
+{"task":"quick","text":"What does API stand for?"}
+{"task":"quick","text":"Spell 'accommodate'"}
+{"task":"quick","text":"Is a tomato a fruit?"}
+{"task":"quick","text":"What's 15 percent of 80?"}
+{"task":"quick","text":"How do you say hello in Japanese?"}
+{"task":"quick","text":"What is the boiling point of water?"}
+{"task":"quick","text":"ok cool"}
+{"task":"quick","text":"Which planet is the largest?"}
+{"task":"quick","text":"Define 'ephemeral'"}
+{"task":"quick","text":"What's the time zone of London?"}
+{"task":"general","text":"Can you help me write a warm birthday message for my colleague who is leaving the team next month?"}
+{"task":"general","text":"Suggest a weekend itinerary for Goa with a mix of beaches and quiet cafes"}
+{"task":"general","text":"What are good habits for staying focused while working from home?"}
+{"task":"general","text":"Write a short poem about monsoon evenings in Mumbai"}
+{"task":"general","text":"Give me ideas for a team offsite activity for 15 people"}
+{"task":"general","text":"Help me draft a polite email asking my landlord to fix the water heater"}
+{"task":"general","text":"Recommend some science fiction books similar to The Three-Body Problem"}
+{"task":"general","text":"What should I pack for a week long trek in Himachal in October?"}
+{"task":"general","text":"Tell me an interesting story about the history of chess"}
+{"task":"general","text":"How can I make my morning routine more relaxing?"}
+{"task":"general","text":"Write a product description for handmade ceramic coffee mugs"}
+{"task":"general","text":"What are some vegetarian dinner ideas that take under 30 minutes?"}
+{"task":"general","text":"Help me plan a surprise anniversary dinner at home"}
+{"task":"general","text":"Describe the difference between baroque and classical music for a beginner"}
+{"task":"general","text":"Write a LinkedIn post announcing my new role as a product manager"}
+{"task":"general","text":"Suggest names for a small bakery that specialises in sourdough"}
+{"task":"general","text":"What are the pros and cons of living in Bangalore versus Pune?"}
+{"task":"general","text":"Write a bedtime story about a curious elephant"}
+{"task":"general","text":"How do I start learning to play the guitar as an adult?"}
+{"task":"general","text":"Give me a motivating message for a friend preparing for exams"}
