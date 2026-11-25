@@ -1,7 +1,7 @@
 {
   "name": "openfocairouter",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Open-source, free-of-cost AI model router for macOS: one local OpenAI-compatible endpoint across free cloud tiers with automatic fallback.",
   "license": "MIT",
   "type": "module",
@@ -15,13 +15,15 @@
     "icons": "tauri icon app-icon.png",
     "test": "bun test router",
     "typecheck": "tsc -p tsconfig.json && tsc -p router/tsconfig.json",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "eval:tasks": "bun run router/test/eval-tasks.ts"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.1.0",
     "@tauri-apps/plugin-opener": "^2.2.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "@tauri-apps/plugin-autostart": "^2.2.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.1.0",
