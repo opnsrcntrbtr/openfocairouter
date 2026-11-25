@@ -1,6 +1,6 @@
 # OpenFOC AI Router
 
-**Open-source, free-of-cost AI gateway for macOS.** A menu-bar app that runs one local endpoint, `http://127.0.0.1:4141`, for OpenAI-style tools, Anthropic-style tools (Claude Code) and embeddings. It spreads your requests across the free tiers of Groq, Google Gemini, OpenRouter, Mistral, GitHub Models and NVIDIA NIM, plus your own models in **oMLX**, Ollama and LM Studio. When a provider rate-limits you, goes down or retires a model, the request moves to the next one automatically.
+**Open-source, free-of-cost AI gateway for macOS.** A menu-bar app that runs one local endpoint, `http://127.0.0.1:4141`, for OpenAI-style tools, Anthropic-style tools (Claude Code) and embeddings. It spreads your requests across the free tiers of Groq, Google Gemini, OpenRouter, Mistral and NVIDIA NIM, plus your own models in **oMLX**, Ollama and LM Studio. When a provider rate-limits you, goes down or retires a model, the request moves to the next one automatically.
 
 ### What's in v0.2
 
@@ -17,7 +17,7 @@
 | 🔒 **Local and private** | Keys in the macOS Keychain, loopback only, browser origins blocked, prompts never sent to the cloud for routing decisions. |
 | 🚀 **Launch at login** | Starts hidden in the menu bar. |
 
-> Free tiers change often. As of Nov 2026, Cerebras gives only a one-time $5 credit with a card, so it ships disabled. Model IDs rotate too: use **Providers → Discover models** and fix route targets if a provider has retired one. The router already skips retired models automatically.
+> Free tiers change often. GitHub Models was retired by GitHub on 30 Jul 2026 and has been removed (existing configs are cleaned up automatically). As of Nov 2026, Cerebras gives only a one-time $5 credit with a card, so it ships disabled. Model IDs rotate too: use **Providers → Discover models** and fix route targets if a provider has retired one. The router already skips retired models automatically.
 
 ## Quick start (macOS, Apple Silicon or Intel)
 
@@ -56,7 +56,6 @@ In a route, `omlx/*` means "the first chat model oMLX serves" and `omlx/*embed` 
 | Google AI Studio | https://aistudio.google.com/apikey | Gemini Flash models free; free-tier prompts may be used for training |
 | OpenRouter | https://openrouter.ai/keys | `:free` models, ~20 RPM / 50 req/day |
 | Mistral | https://console.mistral.ai/api-keys | Experiment plan |
-| GitHub Models | https://github.com/settings/personal-access-tokens (models:read) | rate-limited per model |
 | NVIDIA NIM | https://build.nvidia.com | free dev access |
 
 Paste keys on the Providers tab; they're saved to your **macOS Keychain** and the router holds them only in memory. For headless use (`bun router/src/index.ts`), set `GROQ_API_KEY`, `GEMINI_API_KEY`, `OPENROUTER_API_KEY` and so on.

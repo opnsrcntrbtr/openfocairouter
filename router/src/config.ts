@@ -162,19 +162,6 @@ export const DEFAULT_PROVIDERS: ProviderConfig[] = [
     limits: { rpm: 60 },
   },
   {
-    id: "github",
-    name: "GitHub Models",
-    baseUrl: "https://models.github.ai/inference",
-    modelsUrl: "https://models.github.ai/catalog/models",
-    enabled: true,
-    kind: "cloud",
-    free: "free",
-    capabilities: ["chat", "embeddings"],
-    keyUrl: "https://github.com/settings/personal-access-tokens",
-    notes: "Use a fine-grained PAT with models:read. Small per-request token limits.",
-    limits: { rpm: 10, rpd: 50 },
-  },
-  {
     id: "nvidia",
     name: "NVIDIA NIM",
     baseUrl: "https://integrate.api.nvidia.com/v1",
@@ -243,7 +230,6 @@ export const DEFAULT_ROUTES: RouteConfig[] = [
       "gemini/gemini-2.5-flash",
       "openrouter/meta-llama/llama-3.3-70b-instruct:free",
       "mistral/mistral-small-latest",
-      "github/openai/gpt-4.1-mini",
       "nvidia/meta/llama-3.3-70b-instruct",
       ...LOCAL_CHAIN,
     ],
@@ -262,7 +248,6 @@ export const DEFAULT_ROUTES: RouteConfig[] = [
       "gemini/gemini-2.5-flash",
       "openrouter/qwen/qwen3-coder:free",
       "mistral/devstral-small-latest",
-      "github/openai/gpt-4.1",
       ...LOCAL_CHAIN,
     ],
   },
@@ -279,7 +264,7 @@ export const DEFAULT_ROUTES: RouteConfig[] = [
   {
     name: "vision",
     description: "Prompts with images.",
-    targets: ["gemini/gemini-2.5-flash", "github/openai/gpt-4.1-mini", "openrouter/meta-llama/llama-4-scout:free", "omlx/*", "ollama/*"],
+    targets: ["gemini/gemini-2.5-flash", "openrouter/meta-llama/llama-4-scout:free", "omlx/*", "ollama/*"],
   },
   {
     name: "local",
@@ -387,9 +372,21 @@ export function defaultConfig(): AppConfig {
 }
 
 /** Merge a stored config (v1 or v2) with defaults so new built-ins show up after upgrades. */
+/** Providers that no longer exist; removed from stored configs and routes on load. */
+export const RETIRED_PROVIDERS: Record<string, string> = {
+  github: "GitHub Models was retired by GitHub on 30 Jul 2026 (catalog and inference API removed).",
+};
+
+const notRetired = (target: string) => !(target.split("/")[0]! in RETIRED_PROVIDERS);
+
 export function mergeWithDefaults(stored: Partial<AppConfig> & { version?: number }): AppConfig {
   const base = defaultConfig();
-  const providers = (stored.providers ?? []).map((p) => {
+  stored = {
+    ...stored,
+    routes: stored.routes?.map((r) => ({ ...r, targets: r.targets.filter(notRetired) })),
+    embeddingRoutes: stored.embeddingRoutes?.map((r) => ({ ...r, targets: r.targets.filter(notRetired) })).filter((r) => r.targets.length),
+  };
+  const providers = (stored.providers ?? []).filter((p) => !(p.id in RETIRED_PROVIDERS)).map((p) => {
     const def = base.providers.find((d) => d.id === p.id);
     return def ? { ...def, ...p, capabilities: p.capabilities ?? def.capabilities, anthropicNative: p.anthropicNative ?? def.anthropicNative } : p;
   });

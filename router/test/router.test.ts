@@ -215,3 +215,22 @@ describe("timeouts", () => {
     expect(res.headers.get("x-ofr-provider")).toBe("gemini");
   });
 });
+
+describe("retired providers", () => {
+  test("GitHub Models is removed from stored configs, routes and embedding routes", () => {
+    const stored: any = {
+      version: 2,
+      providers: [...defaultConfig().providers, { id: "github", name: "GitHub Models", baseUrl: "https://models.github.ai/inference", enabled: true, kind: "cloud", free: "free" }],
+      routes: [{ name: "auto", description: "", targets: ["groq/a", "github/openai/gpt-4.1-mini", "ollama/*"] }],
+      embeddingRoutes: [{ name: "gh", description: "", space: "gh", targets: ["github/openai/text-embedding-3-small"] }, { name: "embed", description: "", space: "x", targets: ["omlx/*embed"] }],
+    };
+    const m = mergeWithDefaults(stored);
+    expect(m.providers.some((p) => p.id === "github")).toBe(false);
+    expect(m.routes[0]!.targets).toEqual(["groq/a", "ollama/*"]);
+    expect(m.embeddingRoutes.map((r) => r.name)).toEqual(["embed"]);
+  });
+  test("a non-JSON /models reply gives a clear error instead of a parse crash", async () => {
+    const s = stack({ fetch: mockFetch(() => new Response("OK", { status: 200 })) });
+    await expect(s.router.listModels("groq", true)).rejects.toThrow(/non-JSON reply.*"OK"/);
+  });
+});

@@ -185,8 +185,14 @@ export class Router {
       headers: this.authHeaders(p),
       signal: AbortSignal.timeout(p.kind === "local" ? 2_000 : 8_000),
     });
-    if (!res.ok) throw new Error(`${p.name}: HTTP ${res.status} ${(await res.text()).slice(0, 200)}`);
-    const json: any = await res.json();
+    const text = await res.text();
+    if (!res.ok) throw new Error(`${p.name}: HTTP ${res.status} ${text.slice(0, 200)}`);
+    let json: any;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      throw new Error(`${p.name}: unexpected non-JSON reply from ${p.modelsUrl ?? providerUrl(p, "/models")}: "${text.slice(0, 60)}". Check the base URL; the service may have moved or been retired.`);
+    }
     const arr: any[] = Array.isArray(json) ? json : json.data ?? json.models ?? [];
     let models = arr
       .map((m) => (typeof m === "string" ? m : m.id ?? m.name))
